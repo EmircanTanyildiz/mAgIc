@@ -3,27 +3,31 @@ import os
 import cv2
 import random
 import tensorflow as tf
+from flask import Flask, request, jsonify
 
-# Model kayıp fonksiyonu için özel bir sınıf
+
+app = Flask(__name__)
+
+
 from tensorflow.keras.losses import SparseCategoricalCrossentropy
 
 class CustomSparseCategoricalCrossentropy(SparseCategoricalCrossentropy):
     def __init__(self, **kwargs):
-        kwargs.pop("fn", None)  # 'fn' parametresini kaldır
+        kwargs.pop("fn", None)  
         if kwargs.get("reduction") == "auto":
-            kwargs["reduction"] = "sum_over_batch_size"  # Desteklenen değere güncelle
+            kwargs["reduction"] = "sum_over_batch_size"  
         super().__init__(**kwargs)
 
-# Modeli yükle
-model_path = "D:/AI_Project_Beykoz_Uni_2204040177/model (1).h5"
+
+model_path = "D:\AIProjectAPI\model_1.h5"
 model = tf.keras.models.load_model(
     model_path,
     custom_objects={"SparseCategoricalCrossentropy": CustomSparseCategoricalCrossentropy}
 )
 
-# Videodan kareleri işlemek için yardımcı fonksiyonlar
+
 def format_frames(frame, output_size):
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # RGB'ye çevir
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  
     frame = tf.image.convert_image_dtype(frame, tf.float32)
     frame = tf.image.resize_with_pad(frame, *output_size)
     return frame
@@ -63,31 +67,38 @@ def frames_from_video_file(video_path, n_frames, output_size=(224, 224), frame_s
     result = np.array(result)
     return result
 
-# Video tahminleme
-video_path = "D:/AI_Project_Beykoz_Uni_2204040177/Human Activity Recognition - Video Dataset"
-categories = []
-categories.append("Standing Still")
-categories.append("Meet and Split")
-categories.append("Walking")
-categories.append("Sitting")
-categories.append("Clapping")
 
-categories = list(categories)
-for i in categories:
-    print(i)
-n_frames = 10  # Modelin eğitiminde kullanılan kare sayısı
+categories = ["Standing Still", "Meet and Split", "Walking", "Sitting", "Clapping"]
 
-# İşlenecek video yolu
-video_file_path ="D:\AI_Project_Beykoz_Uni_2204040177\Human Activity Recognition - Video Dataset\Sitting\Sitting (4).mp4"
 
-processed_video = frames_from_video_file(video_file_path, n_frames=n_frames)
-processed_video = np.expand_dims(processed_video, axis=0)  # Batch boyutu eklenir
+@app.route('/predict', methods=['POST'])
+def predict():
+    
+    data = request.get_json()
+    if not data or 'video_path' not in data:
+        return jsonify({"error": "No video_path provided"}), 400
 
-# Tahmin yapın
-predictions = model.predict(processed_video)
+    video_file_path = data['video_path']
 
-# Sınıf tahminini alın
-predicted_class = np.argmax(predictions)
-predicted_label = categories[predicted_class]
+    if not os.path.exists(video_file_path):
+        return jsonify({"error": f"File {video_file_path} does not exist"}), 404
 
-print(f"Predicted class: {predicted_label}")
+    try:
+        n_frames = 10  
+        processed_video = frames_from_video_file(video_file_path, n_frames=n_frames)
+        processed_video = np.expand_dims(processed_video, axis=0)  # Batch boyutu eklenir
+
+       
+        predictions = model.predict(processed_video)
+
+       
+        predicted_class = np.argmax(predictions)
+        predicted_label = categories[predicted_class]
+        print(predicted_label)
+        return jsonify({"predicted_class": predicted_label}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
