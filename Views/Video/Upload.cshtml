@@ -1,0 +1,110 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Upload</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+
+        .form-container {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+
+            .btn-custom:hover {
+                background-color: #0056b3;
+                color: white;
+            }
+
+        .alert {
+            margin-bottom: 20px;
+        }
+
+            .alert h3 {
+                margin-bottom: 10px;
+            }
+
+        .video-preview {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Video Yükleme</h2>
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-success">
+                <strong>Başarılı:</strong> @ViewBag.Message
+            </div>
+        }
+
+        @if (ViewBag.ValidationErrorDetails != null)
+        {
+            <div class="alert alert-danger">
+                <h3>Veritabanı Doğrulama Hataları:</h3>
+                <pre>@ViewBag.ValidationErrorDetails</pre>
+            </div>
+        }
+
+        <div class="form-container">
+            <form action="/Video/Upload" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="videoFile" class="form-label">Video Dosyasını Seçin:</label>
+                    <input type="file" class="form-control" id="videoFile" name="videoFile" accept="video/*" required>
+                </div>
+                <button type="submit" class="btn btn-custom w-100">Video Yükle</button>
+            </form>
+
+            <div class="video-preview">
+                <h5>Video Ön İzlemesi:</h5>
+                <video id="preview" controls width="100%">
+                    <source src="" type="video/mp4">
+                    Tarayıcınız video etiketini desteklemiyor.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("videoFile").addEventListener("change", function (event) {
+            const videoPreview = document.querySelector(".video-preview");
+            const videoElement = document.getElementById("preview");
+            const file = event.target.files[0];
+
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+                videoElement.src = fileURL;
+                videoPreview.style.display = "block";
+            } else {
+                videoPreview.style.display = "none";
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

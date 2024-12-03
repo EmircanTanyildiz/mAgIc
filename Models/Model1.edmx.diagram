@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="fc3cbb21beed45f7aacc6e54723defae" Name="Diagram1">
+        <EntityTypeShape EntityType="mAgIcProjectModel.UserActions" Width="2.125" PointX="8.125" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="mAgIcProjectModel.Users" Width="1.5" PointX="4.25" PointY="1.625" IsExpanded="true" />
+        <AssociationConnector Association="mAgIcProjectModel.FK__UserActio__IDYap__3B75D760" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

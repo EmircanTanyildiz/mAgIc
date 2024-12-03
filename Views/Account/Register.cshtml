@@ -1,0 +1,118 @@
+﻿@model mAgIc.Models.Users
+
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2 style="text-align: center; font-size: 2rem; font-weight: bold; color: #333;">Register</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-container">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Ad, new { @class = "form-label" })
+            @Html.EditorFor(model => model.Ad, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Ad, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Soyad, new { @class = "form-label" })
+            @Html.EditorFor(model => model.Soyad, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Soyad, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.email, new { @class = "form-label" })
+            @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.password, new { @class = "form-label" })
+            @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <div class="submit-container">
+                <input type="submit" value="Create Account" class="btn-submit" />
+            </div>
+        </div>
+    </div>
+}
+
+<h5 style="color:red; text-align: center;">@ViewBag.Message</h5>
+
+<div style="text-align: center;">
+    @Html.ActionLink("Click Here To Login", "Login")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<style>
+    .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label.form-label {
+            display: block;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input.form-control {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
+
+            .form-group input.form-control:focus {
+                border-color: #007bff;
+                outline: none;
+            }
+
+    .submit-container {
+        text-align: center;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+    .form-container hr {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+    }
+</style>
