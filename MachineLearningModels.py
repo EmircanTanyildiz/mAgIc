@@ -87,10 +87,6 @@ models = {
     "SVM": SVC(kernel='linear', probability=True),
     "Random Forest": RandomForestClassifier(n_estimators=300),
     "KNN": KNeighborsClassifier(n_neighbors=55),
-    "Decision Tree": DecisionTreeClassifier(),
-    "Naive Bayes": GaussianNB(),
-    "Gaussian Process": GaussianProcessClassifier(),
-    "LDA": LinearDiscriminantAnalysis(),
 }
 
 
@@ -142,45 +138,3 @@ for name, result in results.items():
     plt.xlabel("Predicted")
     plt.ylabel("True")
     plt.show()
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv3D, MaxPooling3D, LSTM, Dense, Dropout, Flatten
-from tensorflow.keras.optimizers import Adam
-
-
-model = Sequential()
-
-
-model.add(Conv3D(64, kernel_size=(3, 3, 3), activation='relu', input_shape=(10, 64, 64, 3)))  # 10 frame, 64x64 px, 3 renk kanalı
-model.add(MaxPooling3D(pool_size=(2, 2, 2)))
-model.add(Dropout(0.5))
-
-model.add(Conv3D(128, kernel_size=(3, 3, 3), activation='relu'))
-model.add(MaxPooling3D(pool_size=(2, 2, 2)))
-model.add(Dropout(0.5))
-
-model.add(Conv3D(256, kernel_size=(3, 3, 3), activation='relu'))
-model.add(MaxPooling3D(pool_size=(2, 2, 2)))
-model.add(Dropout(0.5))
-
-
-model.add(Flatten())
-model.add(LSTM(128, return_sequences=False, activation='relu'))
-model.add(Dropout(0.5))
-
-
-model.add(Dense(512, activation='relu'))
-model.add(Dropout(0.5))
-
-
-model.add(Dense(len(np.unique(y)), activation='softmax'))  # sınıf sayısına göre çıktı
-
-
-model.compile(optimizer=Adam(), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-
-
-model.fit(X_train, y_train, epochs=20, batch_size=32, validation_data=(X_test, y_test))
-
-
-loss, accuracy = model.evaluate(X_test, y_test)
-print(f"Test kaybı: {loss:.4f}, Test doğruluğu: {accuracy:.4f}")
